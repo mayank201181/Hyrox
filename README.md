@@ -9,6 +9,6 @@
 ## Setup on Vercel
 
 1. Connect a **private Vercel Blob store** to the project (Storage → Create → Blob). This adds `BLOB_READ_WRITE_TOKEN`; redeploy afterwards. Until then the API answers `503` and the page keeps answers on the device and retries on the next visit.
-2. The owner passcode is checked against a salted scrypt hash in `api/results.js`. To use your own passcode instead, set a `RESULTS_KEY` environment variable and redeploy.
+2. The owner passcode is stored as a salted scrypt hash in the private Blob store (`hyrox/config/passcode.json`), never in this public repo. Change it with `PUT /api/results` and body `{"passcode": "..."}`, sending the current passcode in `x-results-key`. Before one has been set, `RESULTS_KEY` (if present) or the long built-in passcode hashed in `api/results.js` works.
 
-At most 30 different names are accepted.
+After 30 wrong passcodes in an hour, every passcode is refused until the hour is up. At most 30 different names are accepted.

@@ -1,14 +1,23 @@
 import { put, get, list, del } from "@vercel/blob";
-import { createHash, scryptSync, timingSafeEqual } from "node:crypto";
+import { createHash, randomBytes, scryptSync, timingSafeEqual } from "node:crypto";
 
 // One private JSON blob per person, keyed by a slug of their name.
 const PREFIX = "hyrox/results/";
 const MAX_PEOPLE = 30;
 
-// Owner passcode for GET/DELETE. Only a salted scrypt hash lives here; set a
-// RESULTS_KEY environment variable in Vercel to use a different passcode.
+// Owner passcode for GET, DELETE and PUT. A passcode set through PUT is stored
+// as a salted scrypt hash in the private Blob store, never in this public repo.
+// Until one is set, RESULTS_KEY (if present) or the long built-in passcode
+// hashed below is accepted.
 const KEY_SALT = "f854d3cc911b5c89f1e93d36f219c692";
 const KEY_HASH = "0cad7a4ece5a03c629b9dadf112c40fe2193f0ae6facc9804c8bb3a8dd8b6ed5";
+const PASSCODE_PATH = "hyrox/config/passcode.json";
+
+// Every wrong passcode leaves a marker blob. After MAX_FAILS in the last hour
+// all passcodes are refused until the oldest marker ages out.
+const FAIL_PREFIX = "hyrox/guard/";
+const MAX_FAILS = 30;
+const WINDOW_MS = 60 * 60 * 1000;
 
 // Question index -> quality. Must match QUESTIONS in index.html.
 const PILLAR_OF = ["engine", "engine", "strength", "strength", "stamina", "stamina", "recovery", "recovery", "durability", "durability"];
@@ -42,17 +51,15 @@ function score(answers) {
   return { pillars, total, verdict };
 }
 
-function keyOk(req) {
-  const given = String(req.headers["x-results-key"] || "").slice(0, 200);
-  if (!given) return false;
-  const salt = Buffer.from(KEY_SALT, "hex");
-  const expected = process.env.RESULTS_KEY
-    ? scryptSync(process.env.RESULTS_KEY, salt, 32)
-    : Buffer.from(KEY_HASH, "hex");
-  return timingSafeEqual(scryptSync(given, salt, 32), expected);
-}
-
 const sleep = (ms) => new Promise((r) => setTimeout(r, ms));
+
+function parseBody(req) {
+  let body = req.body;
+  if (typeof body === "string") {
+    try { body = JSON.parse(body); } catch { body = {}; }
+  }
+  return body || {};
+}
 
 async function readJson(pathname) {
   const r = await get(pathname, { access: "private", useCache: false });
@@ -60,23 +67,76 @@ async function readJson(pathname) {
   return JSON.parse(await new Response(r.stream).text());
 }
 
-async function listPathnames() {
+async function putJson(pathname, value) {
+  await put(pathname, JSON.stringify(value), {
+    access: "private",
+    contentType: "application/json",
+    addRandomSuffix: false,
+    allowOverwrite: true,
+    cacheControlMaxAge: 60
+  });
+}
+
+async function listBlobs(prefix) {
   const out = [];
   let cursor;
   do {
-    const page = await list({ prefix: PREFIX, cursor, limit: 1000 });
-    out.push(...page.blobs.map((b) => b.pathname));
+    const page = await list({ prefix, cursor, limit: 1000 });
+    out.push(...page.blobs);
     cursor = page.hasMore ? page.cursor : undefined;
   } while (cursor);
   return out;
 }
 
-async function save(req, res) {
-  let body = req.body;
-  if (typeof body === "string") {
-    try { body = JSON.parse(body); } catch { body = {}; }
+async function listPathnames() {
+  return (await listBlobs(PREFIX)).map((b) => b.pathname);
+}
+
+function hashMatches(given, saltHex, hashHex) {
+  return timingSafeEqual(scryptSync(given, Buffer.from(saltHex, "hex"), 32), Buffer.from(hashHex, "hex"));
+}
+
+async function recentFails(now) {
+  const fresh = [];
+  const stale = [];
+  for (const b of await listBlobs(FAIL_PREFIX)) {
+    (now - new Date(b.uploadedAt).getTime() < WINDOW_MS ? fresh : stale).push(b.pathname);
   }
-  body = body || {};
+  if (stale.length) await del(stale).catch(() => {});
+  return fresh.length;
+}
+
+// Returns "ok", "bad" or "locked".
+async function checkKey(req) {
+  const given = String(req.headers["x-results-key"] || "").slice(0, 200);
+  if (!given) return "bad";
+  const now = Date.now();
+  if ((await recentFails(now)) >= MAX_FAILS) return "locked";
+  const stored = await readJson(PASSCODE_PATH).catch(() => null);
+  let ok;
+  if (stored && stored.salt && stored.hash) ok = hashMatches(given, stored.salt, stored.hash);
+  else if (process.env.RESULTS_KEY) ok = hashMatches(given, KEY_SALT, scryptSync(process.env.RESULTS_KEY, Buffer.from(KEY_SALT, "hex"), 32).toString("hex"));
+  else ok = hashMatches(given, KEY_SALT, KEY_HASH);
+  if (ok) return "ok";
+  await put(`${FAIL_PREFIX}${now}-${randomBytes(4).toString("hex")}.json`, "{}", {
+    access: "private",
+    contentType: "application/json",
+    addRandomSuffix: false
+  });
+  return "bad";
+}
+
+async function authorize(req, res) {
+  const status = await checkKey(req);
+  if (status === "ok") return true;
+  await sleep(700);
+  if (status === "locked") res.status(429).json({ error: "Too many wrong passcodes. Try again in an hour." });
+  else res.status(401).json({ error: "Wrong passcode." });
+  return false;
+}
+
+async function save(req, res) {
+  const body = parseBody(req);
   const name = cleanName(body.name);
   const answers = body.answers;
   if (name.length < 2) return res.status(400).json({ error: "Enter your name, at least 2 characters." });
@@ -110,21 +170,12 @@ async function save(req, res) {
     firstAt: existing?.firstAt || now,
     updatedAt: now
   };
-  await put(pathname, JSON.stringify(record), {
-    access: "private",
-    contentType: "application/json",
-    addRandomSuffix: false,
-    allowOverwrite: true,
-    cacheControlMaxAge: 60
-  });
+  await putJson(pathname, record);
   return res.status(200).json({ ok: true, name, total: s.total, verdict: s.verdict, attempts: record.attempts });
 }
 
 async function listAll(req, res) {
-  if (!keyOk(req)) {
-    await sleep(700);
-    return res.status(401).json({ error: "Wrong passcode." });
-  }
+  if (!(await authorize(req, res))) return;
   const pathnames = await listPathnames();
   const records = (await Promise.all(pathnames.map((p) => readJson(p).catch(() => null)))).filter(Boolean);
   records.sort((a, b) => b.total - a.total || a.name.localeCompare(b.name));
@@ -132,13 +183,21 @@ async function listAll(req, res) {
 }
 
 async function remove(req, res) {
-  if (!keyOk(req)) {
-    await sleep(700);
-    return res.status(401).json({ error: "Wrong passcode." });
-  }
+  if (!(await authorize(req, res))) return;
   const slug = String(req.query.slug || "");
   if (!/^[a-z0-9-]{1,60}$/.test(slug)) return res.status(400).json({ error: "Unknown person." });
   await del(`${PREFIX}${slug}.json`);
+  return res.status(200).json({ ok: true });
+}
+
+// Change the owner passcode. Requires the current one in x-results-key.
+async function setPasscode(req, res) {
+  if (!(await authorize(req, res))) return;
+  const next = String(parseBody(req).passcode || "").trim();
+  if (next.length < 4 || next.length > 64) return res.status(400).json({ error: "Use 4 to 64 characters." });
+  const salt = randomBytes(16).toString("hex");
+  const hash = scryptSync(next, Buffer.from(salt, "hex"), 32).toString("hex");
+  await putJson(PASSCODE_PATH, { salt, hash, changedAt: new Date().toISOString() });
   return res.status(200).json({ ok: true });
 }
 
@@ -151,7 +210,8 @@ export default async function handler(req, res) {
     if (req.method === "POST") return await save(req, res);
     if (req.method === "GET") return await listAll(req, res);
     if (req.method === "DELETE") return await remove(req, res);
-    res.setHeader("Allow", "GET, POST, DELETE");
+    if (req.method === "PUT") return await setPasscode(req, res);
+    res.setHeader("Allow", "GET, POST, PUT, DELETE");
     return res.status(405).json({ error: "Method not allowed." });
   } catch (err) {
     console.error(err);
