@@ -1,0 +1,118 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>HYROX Share Cards</title>
+<meta name="description" content="Four images comparing HYROX Solo, Doubles and Relay, ready to forward on WhatsApp.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Big+Shoulders+Display:wght@800;900&family=Instrument+Sans:wght@400;500;600;700&family=JetBrains+Mono:wght@500;700&display=swap">
+<style>
+:root{
+  /* Layout: a simple gallery of the four share cards, one column, with a share action on top. */
+  --bg:#F1F3F7;--surface:#FFFFFF;--ink:#0E1422;--muted:#545E72;--line:#D4DAE4;
+  --accent:#2340E6;--accent-ink:#FFFFFF;
+  --font-display:"Big Shoulders Display","Arial Narrow",Impact,sans-serif;
+  --font-body:"Instrument Sans",system-ui,-apple-system,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;
+  --font-mono:"JetBrains Mono",ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;
+  color-scheme:light;
+  padding-top:env(safe-area-inset-top,0px);
+  padding-bottom:env(safe-area-inset-bottom,0px);
+}
+@media (prefers-color-scheme:dark){
+  :root:not([data-theme="light"]){--bg:#0B101A;--surface:#121A28;--ink:#E8ECF4;--muted:#9BA5B7;--line:#273146;--accent:#7D8CFF;--accent-ink:#0B101A;color-scheme:dark}
+}
+:root[data-theme="dark"]{--bg:#0B101A;--surface:#121A28;--ink:#E8ECF4;--muted:#9BA5B7;--line:#273146;--accent:#7D8CFF;--accent-ink:#0B101A;color-scheme:dark}
+*,*::before,*::after{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--ink);font-family:var(--font-body);line-height:1.5;-webkit-font-smoothing:antialiased}
+[hidden]{display:none!important}
+a{color:var(--accent);text-underline-offset:.18em}
+:focus-visible{outline:3px solid var(--accent);outline-offset:2px}
+.page{max-width:40rem;margin:0 auto;padding-inline:clamp(16px,4vw,24px);padding-block:clamp(24px,6vw,48px) 64px;display:grid;gap:24px}
+.eyebrow{margin:0;font:500 .75rem/1.3 var(--font-mono);letter-spacing:.08em;text-transform:uppercase;color:var(--muted)}
+h1{margin:0;font:900 clamp(2.6rem,11vw,4rem)/.9 var(--font-display);text-transform:uppercase;text-wrap:balance}
+h1 span{color:var(--accent)}
+.lede{margin:0;color:var(--muted);max-width:52ch}
+.actions{display:flex;flex-wrap:wrap;gap:10px;align-items:center}
+.btn{appearance:none;border:1px solid transparent;border-radius:8px;padding:12px 18px;font:600 1rem/1.2 var(--font-body);cursor:pointer;text-decoration:none;display:inline-flex;align-items:center;gap:8px}
+.btn-primary{background:var(--accent);color:var(--accent-ink)}
+.btn-ghost{background:transparent;color:var(--ink);border-color:var(--line)}
+.status{font-size:.875rem;color:var(--muted)}
+.cards{list-style:none;margin:0;padding:0;display:grid;gap:22px}
+.cards li{display:grid;gap:10px}
+.cards img{display:block;width:100%;height:auto;border-radius:12px;border:1px solid var(--line);background:var(--surface)}
+.row{display:flex;justify-content:space-between;align-items:center;gap:10px;flex-wrap:wrap;font-size:.875rem;color:var(--muted)}
+.row b{color:var(--ink)}
+.tip{background:var(--surface);border:1px solid var(--line);border-radius:12px;padding:14px 16px;font-size:.9375rem}
+</style>
+</head>
+<body>
+<main class="page">
+  <header style="display:grid;gap:12px">
+    <p class="eyebrow">Can You Do HYROX? · share cards</p>
+    <h1>Solo, doubles or <span>relay?</span></h1>
+    <p class="lede">Four images to forward to friends: what each person does in each format, how to split a relay, who's ready for one, and the weights.</p>
+  </header>
+
+  <div class="actions">
+    <button class="btn btn-primary" type="button" id="share-all" hidden>Share all 4 to WhatsApp</button>
+    <a class="btn btn-ghost" href="/">Open the readiness test</a>
+    <span class="status" id="status" role="status"></span>
+  </div>
+  <p class="tip" id="tip">On a phone: press and hold an image, then choose <b>Share</b> or <b>Save</b>. On a computer: right-click and save, then drop the images into WhatsApp.</p>
+
+  <ol class="cards">
+    <li><img src="/cards/hyrox-1-formats.png" width="1080" height="1350" alt="Solo, Doubles or Relay: per person. Solo is 8 km of running and all 8 stations. Doubles is 8 km of running side by side with the 8 stations shared. Relay is 2 km of running and 2 stations each."><div class="row"><span><b>1</b> · Solo vs Doubles vs Relay</span><button class="btn btn-ghost" type="button" data-share="0" hidden>Share</button></div></li>
+    <li><img src="/cards/hyrox-2-relay-legs.png" width="1080" height="1350" alt="Relay: who does what. A, least fit: row and farmers carry. B, strongest: sled push and pull. C, fittest legs: lunges and wall balls. D, all-rounder: SkiErg and burpee broad jumps."><div class="row"><span><b>2</b> · Relay: who does what</span><button class="btn btn-ghost" type="button" data-share="1" hidden>Share</button></div></li>
+    <li><img src="/cards/hyrox-3-relay-ready.png" width="1080" height="1350" alt="Ready for relay if you can jog 1 km twice, row 1,000 m and carry two kettlebells 200 m. Weights don't get lighter and every station must be finished."><div class="row"><span><b>3</b> · Ready for relay?</span><button class="btn btn-ghost" type="button" data-share="2" hidden>Share</button></div></li>
+    <li><img src="/cards/hyrox-4-numbers.png" width="1080" height="1350" alt="The numbers: the eight stations with women's and men's Open weights, and AIA HYROX Singapore on 26 to 29 November at Singapore EXPO."><div class="row"><span><b>4</b> · The numbers</span><button class="btn btn-ghost" type="button" data-share="3" hidden>Share</button></div></li>
+  </ol>
+</main>
+<script>
+(() => {
+  "use strict";
+  const FILES = ["hyrox-1-formats.png", "hyrox-2-relay-legs.png", "hyrox-3-relay-ready.png", "hyrox-4-numbers.png"];
+  const TEXT = "Can you do HYROX? Take the 2-minute test: https://can-you-do-hyrox.vercel.app";
+  const status = document.getElementById("status");
+  const cache = {};
+
+  async function file(name) {
+    if (!cache[name]) {
+      const res = await fetch(`/cards/${name}`);
+      if (!res.ok) throw new Error("Couldn't load the image.");
+      cache[name] = new File([await res.blob()], name, { type: "image/png" });
+    }
+    return cache[name];
+  }
+
+  async function share(names) {
+    status.textContent = "";
+    try {
+      const files = await Promise.all(names.map(file));
+      if (!navigator.canShare || !navigator.canShare({ files })) throw new Error("This browser can't share images. Press and hold an image instead.");
+      await navigator.share({ files, text: TEXT });
+    } catch (e) {
+      if (e && e.name === "AbortError") return;
+      status.textContent = e.message || "Sharing didn't work. Press and hold an image instead.";
+    }
+  }
+
+  // Web Share with files is mostly a phone feature; only show the buttons where it can work.
+  let canShareFiles = false;
+  try {
+    canShareFiles = !!(navigator.canShare && navigator.canShare({ files: [new File([""], "x.png", { type: "image/png" })] }));
+  } catch (e) { canShareFiles = false; }
+  if (canShareFiles) {
+    const all = document.getElementById("share-all");
+    all.hidden = false;
+    all.addEventListener("click", () => share(FILES));
+    document.querySelectorAll("[data-share]").forEach((b) => {
+      b.hidden = false;
+      b.addEventListener("click", () => share([FILES[Number(b.dataset.share)]]));
+    });
+  }
+})();
+</script>
+</body>
+</html>

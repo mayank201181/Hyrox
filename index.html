@@ -23,6 +23,7 @@
   --warn:#FAB219;
   --bad:#D03B3B;
   --bad-ink:#B42318;
+  --p1:#2a78d6;--p2:#eb6834;--p3:#1baf7a;--p4:#eda100;
   --font-display:"Big Shoulders Display","Arial Narrow","Roboto Condensed",Impact,sans-serif;
   --font-body:"Instrument Sans",system-ui,-apple-system,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;
   --font-mono:"JetBrains Mono",ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;
@@ -42,12 +43,14 @@
   :root:not([data-theme="light"]){
     --bg:#0B101A;--surface:#121A28;--sunken:#0E1421;--ink:#E8ECF4;--muted:#9BA5B7;--line:#273146;
     --accent:#7D8CFF;--accent-ink:#0B101A;--accent-soft:#1D2754;--bad-ink:#FF8A80;
+    --p1:#3987e5;--p2:#d95926;--p3:#199e70;--p4:#c98500;
     color-scheme:dark;
   }
 }
 :root[data-theme="dark"]{
   --bg:#0B101A;--surface:#121A28;--sunken:#0E1421;--ink:#E8ECF4;--muted:#9BA5B7;--line:#273146;
   --accent:#7D8CFF;--accent-ink:#0B101A;--accent-soft:#1D2754;--bad-ink:#FF8A80;
+  --p1:#3987e5;--p2:#d95926;--p3:#199e70;--p4:#c98500;
   color-scheme:dark;
 }
 
@@ -240,14 +243,49 @@ details.answers summary{cursor:pointer;font-weight:600;width:max-content;max-wid
 .course li.finish .st{grid-row:1;align-self:center;padding:0}
 .small-note{font-size:var(--fs-sm);color:var(--muted);max-width:62ch}
 
-/* Formats */
-.formats{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:12px}
-.fmt{border:1px solid var(--line);border-radius:var(--r-md);padding:18px;display:grid;gap:8px;align-content:start;background:var(--surface);min-width:0}
+/* Formats: per-person workload, then the relay split */
+.fmt-rows{display:grid;gap:12px}
+.fmt{border:1px solid var(--line);border-radius:var(--r-md);padding:16px 18px;display:grid;gap:12px;background:var(--surface);min-width:0}
 .fmt.pick{border-color:var(--accent);box-shadow:inset 0 0 0 1px var(--accent)}
 .fmt-top{display:flex;justify-content:space-between;align-items:center;gap:8px;flex-wrap:wrap}
-.fmt h3{font-family:var(--font-display);font-weight:800;font-size:1.875rem;line-height:1;text-transform:uppercase}
+.fmt-top .who{font:700 .6875rem/1 var(--font-mono);letter-spacing:.08em;text-transform:uppercase;color:var(--muted)}
+.fmt h3{font-family:var(--font-display);font-weight:800;font-size:1.875rem;line-height:1;text-transform:uppercase;display:flex;align-items:center;gap:10px}
 .fmt p{font-size:var(--fs-sm)}
 .badge{font-family:var(--font-mono);font-size:.625rem;font-weight:700;letter-spacing:.08em;text-transform:uppercase;background:var(--accent);color:var(--accent-ink);padding:4px 7px;border-radius:4px;white-space:nowrap}
+.mstrip{display:flex;align-items:center;gap:3px;height:20px}
+.mstrip i{display:block;background:var(--surface);border:1.5px solid var(--line)}
+.mstrip .r{flex:1 1 0;min-width:4px;height:6px;border-radius:3px}
+.mstrip .s{flex:0 0 18px;height:18px;border-radius:4px}
+.mstrip .you{background:var(--accent);border-color:var(--accent)}
+.mstrip .half{background:linear-gradient(135deg,var(--accent) 50%,var(--surface) 50%);border-color:var(--accent)}
+.fmt-stats{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px;margin:0}
+.fmt-stats div{display:grid;gap:2px;min-width:0}
+.fmt-stats dt{font-size:var(--fs-xs);color:var(--muted)}
+.fmt-stats dd{margin:0;font-weight:700;font-size:1.25rem;line-height:1.15;letter-spacing:-.01em}
+.fmt-legend{display:flex;flex-wrap:wrap;gap:6px 18px;font-size:var(--fs-sm);color:var(--muted);align-items:center}
+.fmt-legend span{display:inline-flex;align-items:center;gap:7px}
+.fmt-legend i{display:inline-block;width:14px;height:14px;border-radius:3px;border:1.5px solid var(--line);background:var(--surface)}
+.fmt-legend i.you{background:var(--accent);border-color:var(--accent)}
+.fmt-legend i.half{background:linear-gradient(135deg,var(--accent) 50%,var(--surface) 50%);border-color:var(--accent)}
+.relay{display:grid;gap:14px;padding-top:6px}
+.relay-h{font-family:var(--font-display);font-weight:800;font-size:1.75rem;line-height:1;text-transform:uppercase}
+.relay-legs{list-style:none;margin:0;padding:0;display:grid;grid-template-columns:repeat(8,minmax(0,1fr));gap:6px}
+.relay-legs li{background:var(--surface);border:1px solid var(--line);border-radius:8px;overflow:hidden;display:grid;text-align:center;min-width:0}
+.relay-legs li::before{content:"";height:6px;background:var(--c)}
+.relay-legs .n{font:800 1.5rem/1 var(--font-display);padding-top:6px}
+.relay-legs .st{font-size:.6875rem;font-weight:600;line-height:1.15;padding:2px 3px 6px;min-height:2.3em}
+.relay-legs .lt{font:700 .8125rem/1 var(--font-mono);padding:5px 0 6px;border-top:1px solid var(--line)}
+.relay-people{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}
+.rp{background:var(--surface);border:1px solid var(--line);border-left:6px solid var(--c);border-radius:var(--r-md);padding:12px 14px;display:grid;gap:6px;align-content:start;min-width:0}
+.rp h4{font-family:var(--font-display);font-weight:800;font-size:1.375rem;line-height:1;text-transform:uppercase}
+.rp ul{list-style:none;margin:0;padding:0;display:grid;gap:2px;font-weight:600;font-size:var(--fs-sm)}
+.rp ul span{font-family:var(--font-mono);color:var(--muted);margin-right:6px}
+.rp p{font-size:var(--fs-sm);color:var(--muted)}
+.pa{--c:var(--p1)}.pb{--c:var(--p2)}.pc{--c:var(--p3)}.pd{--c:var(--p4)}
+.relay-ready{background:var(--sunken);border-radius:var(--r-md);padding:16px 18px;display:grid;gap:10px}
+.relay-ready h4{font-weight:700;font-size:var(--fs-lg)}
+.relay-ready ol{margin:0;padding-left:1.3rem;display:grid;gap:4px}
+.relay-ready p{font-size:var(--fs-sm)}
 
 /* Plan */
 .week{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:12px}
@@ -274,7 +312,8 @@ details.answers summary{cursor:pointer;font-weight:600;width:max-content;max-wid
 }
 @media (max-width:640px){
   .facts{grid-template-columns:repeat(2,minmax(0,1fr))}
-  .formats{grid-template-columns:1fr}
+  .relay-legs{grid-template-columns:repeat(4,minmax(0,1fr))}
+  .relay-people{grid-template-columns:1fr}
   .pair{grid-template-columns:1fr}
 }
 @media (max-width:560px){
@@ -530,26 +569,63 @@ details.answers summary{cursor:pointer;font-weight:600;width:max-content;max-wid
 
   <section class="block" id="formats" aria-labelledby="formats-title">
     <div class="block-head">
-      <p class="eyebrow">Solo, pair or team</p>
+      <p class="eyebrow">Solo, pair or team · per person</p>
       <h2 id="formats-title">Pick how you race</h2>
+      <p>Same course and the same weights in every format. What changes is how much of the race is yours.</p>
     </div>
-    <div class="formats">
+    <div class="fmt-rows">
       <article class="fmt">
-        <div class="fmt-top"><h3>Open</h3></div>
-        <p class="eyebrow">Solo</p>
-        <p>All 8 km and all 8 stations on your own, at the weights above.</p>
+        <div class="fmt-top"><h3>Solo</h3><span class="who">1 person</span></div>
+        <div class="mstrip" aria-hidden="true"><i class="r you"></i><i class="s you"></i><i class="r you"></i><i class="s you"></i><i class="r you"></i><i class="s you"></i><i class="r you"></i><i class="s you"></i><i class="r you"></i><i class="s you"></i><i class="r you"></i><i class="s you"></i><i class="r you"></i><i class="s you"></i><i class="r you"></i><i class="s you"></i></div>
+        <dl class="fmt-stats"><div><dt>Running</dt><dd>8 km</dd></div><div><dt>Stations</dt><dd>All 8</dd></div><div><dt>Typical first race*</dt><dd>1:30–2:10</dd></div></dl>
+        <p>Everything is yours, at the weights above.</p>
+      </article>
+      <article class="fmt">
+        <div class="fmt-top"><h3>Doubles</h3><span class="who">2 people</span></div>
+        <div class="mstrip" aria-hidden="true"><i class="r you"></i><i class="s half"></i><i class="r you"></i><i class="s half"></i><i class="r you"></i><i class="s half"></i><i class="r you"></i><i class="s half"></i><i class="r you"></i><i class="s half"></i><i class="r you"></i><i class="s half"></i><i class="r you"></i><i class="s half"></i><i class="r you"></i><i class="s half"></i></div>
+        <dl class="fmt-stats"><div><dt>Running</dt><dd>8 km, together</dd></div><div><dt>Stations</dt><dd>All 8, taking turns</dd></div><div><dt>Typical first race*</dt><dd>1:25–1:50</dd></div></dl>
+        <p>Halves the station work, <b>not the running</b>: you run every kilometre side by side, so it's barely quicker than solo. One of you works a station while the other rests. Mixed pairs use the men's weights.</p>
       </article>
       <article class="fmt pick">
-        <div class="fmt-top"><h3>Doubles</h3><span class="badge">Good first race</span></div>
-        <p class="eyebrow">Two people</p>
-        <p>You run every kilometre together and split each station however you like, one working while the other rests. Same weights as Open; mixed pairs use the men's weights.</p>
-      </article>
-      <article class="fmt">
-        <div class="fmt-top"><h3>Relay</h3></div>
-        <p class="eyebrow">Four people</p>
-        <p>Each person runs 2 × 1 km and does 2 stations. The gentlest way in.</p>
+        <div class="fmt-top"><h3>Relay <span class="badge">Easiest way in</span></h3><span class="who">4 people</span></div>
+        <div class="mstrip" aria-hidden="true"><i class="r"></i><i class="s"></i><i class="r"></i><i class="s"></i><i class="r"></i><i class="s"></i><i class="r"></i><i class="s"></i><i class="r you"></i><i class="s you"></i><i class="r you"></i><i class="s you"></i><i class="r"></i><i class="s"></i><i class="r"></i><i class="s"></i></div>
+        <dl class="fmt-stats"><div><dt>Running</dt><dd>2 km</dd></div><div><dt>Stations</dt><dd>2 of 8</dd></div><div><dt>Work each</dt><dd>20–30 min*</dd></div></dl>
+        <p>Each person runs 2 × 1 km and does 2 stations, and the team decides who does which. Only one of you works at a time.</p>
       </article>
     </div>
+    <p class="fmt-legend" aria-hidden="true"><span><i class="you"></i>you</span><span><i class="half"></i>shared</span><span><i></i>teammates</span><span>bar = 1 km run, square = station</span></p>
+    <p class="small-note">*Approximate, from third-party analysis of 2025/26 results. Singapore races have run slower than average.</p>
+
+    <div class="relay">
+      <h3 class="relay-h">Relay: who does what</h3>
+      <p class="small-note">Popular tips from relay guides, not rules: the team decides who does which legs, back to back or split up.</p>
+      <ol class="relay-legs" aria-label="Relay legs and who takes them">
+        <li class="pa"><span class="n">1</span><span class="st">SkiErg</span><span class="lt">A</span></li>
+        <li class="pb"><span class="n">2</span><span class="st">Sled push</span><span class="lt">B</span></li>
+        <li class="pb"><span class="n">3</span><span class="st">Sled pull</span><span class="lt">B</span></li>
+        <li class="pc"><span class="n">4</span><span class="st">Burpee jumps</span><span class="lt">C</span></li>
+        <li class="pa"><span class="n">5</span><span class="st">Row</span><span class="lt">A</span></li>
+        <li class="pd"><span class="n">6</span><span class="st">Farmers carry</span><span class="lt">D</span></li>
+        <li class="pd"><span class="n">7</span><span class="st">Lunges</span><span class="lt">D</span></li>
+        <li class="pc"><span class="n">8</span><span class="st">Wall balls</span><span class="lt">C</span></li>
+      </ol>
+      <div class="relay-people">
+        <div class="rp pa"><h4>A · Least fit</h4><ul><li><span>1</span>SkiErg 1,000 m</li><li><span>5</span>Row 1,000 m</li></ul><p>Both machines: you set the pace and can pause any time, with a long rest in between.</p></div>
+        <div class="rp pb"><h4>B · Strongest</h4><ul><li><span>2</span>Sled push 50 m</li><li><span>3</span>Sled pull 50 m</li></ul><p>The sleds only move if you're strong enough. Tough back to back, so two strong people can split them.</p></div>
+        <div class="rp pc"><h4>C · Best engine</h4><ul><li><span>4</span>Burpee broad jumps 80 m</li><li><span>8</span>100 wall balls</li></ul><p>The two most tiring stations. The team joins you at the wall balls and all four cross the line together.</p></div>
+        <div class="rp pd"><h4>D · All-rounder</h4><ul><li><span>6</span>Farmers carry 200 m</li><li><span>7</span>Sandbag lunges 100 m</li></ul><p>Grip, then legs, back to back.</p></div>
+      </div>
+      <div class="relay-ready">
+        <h4>Ready for relay if you can…</h4>
+        <ol>
+          <li>Jog 1 km, twice. Walk breaks are fine.</li>
+          <li>SkiErg 1,000 m at your own pace.</li>
+          <li>Row 1,000 m at your own pace.</li>
+        </ol>
+        <p>What doesn't get easier: the weights are the same as solo, and every station must be finished in full or the team is disqualified. Teams are 4 women, 4 men, or 2 and 2.</p>
+      </div>
+    </div>
+    <div class="actions"><a class="btn btn-primary" href="/share">Get this as WhatsApp images</a></div>
     <p class="small-note">Pro divisions use heavier weights. You don't need them for a first race.</p>
   </section>
 
@@ -664,8 +740,8 @@ details.answers summary{cursor:pointer;font-weight:600;width:max-content;max-wid
       bodyRun: "Everything except your running is race-ready. Race Doubles now, or go solo in Open once you've run twice a week for a couple of months.",
       div: "Doubles now, Open next", prep: "10 to 12 weeks to solo Open" },
     team: { band: 1, head: "Yes, with a team.",
-      body: "Start with a Relay, where you run 2 × 1 km and do 2 stations, or Doubles with a fitter partner. Solo Open is about four months away.",
-      div: "Relay or Doubles", prep: "12 to 16 weeks to solo Open" },
+      body: "Start with a Relay: you run 2 × 1 km and do 2 stations, and the team picks which. Doubles halves the stations but you still run all 8 km. Solo Open is about four months away.",
+      div: "Relay now", prep: "12 to 16 weeks to solo Open" },
     notyet: { band: 0, head: "Not yet. Give it 16 weeks.",
       body: "Build a running habit and basic leg strength first. A Relay is a realistic first race. Retake this test in a month and watch the bars move.",
       div: "Relay first", prep: "16+ weeks to solo Open" }
