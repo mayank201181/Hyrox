@@ -261,7 +261,8 @@ details.answers summary{cursor:pointer;font-weight:600;width:max-content;max-wid
 .fmt-stats{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px;margin:0}
 .fmt-stats div{display:grid;gap:2px;min-width:0}
 .fmt-stats dt{font-size:var(--fs-xs);color:var(--muted)}
-.fmt-stats dd{margin:0;font-weight:700;font-size:1.25rem;line-height:1.15;letter-spacing:-.01em}
+.fmt-stats dd{margin:0;font-weight:700;font-size:1.25rem;line-height:1.15;letter-spacing:-.01em;white-space:nowrap}
+@media (max-width:420px){.fmt-stats dd{font-size:1.0625rem}.fmt-stats dt{font-size:.6875rem}}
 .fmt-legend{display:flex;flex-wrap:wrap;gap:6px 18px;font-size:var(--fs-sm);color:var(--muted);align-items:center}
 .fmt-legend span{display:inline-flex;align-items:center;gap:7px}
 .fmt-legend i{display:inline-block;width:14px;height:14px;border-radius:3px;border:1.5px solid var(--line);background:var(--surface)}
@@ -272,9 +273,9 @@ details.answers summary{cursor:pointer;font-weight:600;width:max-content;max-wid
 .relay-legs{list-style:none;margin:0;padding:0;display:grid;grid-template-columns:repeat(8,minmax(0,1fr));gap:6px}
 .relay-legs li{background:var(--surface);border:1px solid var(--line);border-radius:8px;overflow:hidden;display:grid;text-align:center;min-width:0}
 .relay-legs li::before{content:"";height:6px;background:var(--c)}
-.relay-legs .n{font:800 1.5rem/1 var(--font-display);padding-top:6px}
-.relay-legs .st{font-size:.6875rem;font-weight:600;line-height:1.15;padding:2px 3px 6px;min-height:2.3em}
-.relay-legs .lt{font:700 .8125rem/1 var(--font-mono);padding:5px 0 6px;border-top:1px solid var(--line)}
+.relay-legs .rl-n{font:800 1.5rem/1 var(--font-display);padding-top:6px}
+.relay-legs .rl-st{font-size:.6875rem;font-weight:600;line-height:1.15;padding:2px 3px 6px;min-height:2.3em}
+.relay-legs .rl-lt{font:700 .8125rem/1 var(--font-mono);padding:5px 0 6px;border-top:1px solid var(--line)}
 .relay-people{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}
 .rp{background:var(--surface);border:1px solid var(--line);border-left:6px solid var(--c);border-radius:var(--r-md);padding:12px 14px;display:grid;gap:6px;align-content:start;min-width:0}
 .rp h4{font-family:var(--font-display);font-weight:800;font-size:1.375rem;line-height:1;text-transform:uppercase}
@@ -583,13 +584,13 @@ details.answers summary{cursor:pointer;font-weight:600;width:max-content;max-wid
       <article class="fmt">
         <div class="fmt-top"><h3>Doubles</h3><span class="who">2 people</span></div>
         <div class="mstrip" aria-hidden="true"><i class="r you"></i><i class="s half"></i><i class="r you"></i><i class="s half"></i><i class="r you"></i><i class="s half"></i><i class="r you"></i><i class="s half"></i><i class="r you"></i><i class="s half"></i><i class="r you"></i><i class="s half"></i><i class="r you"></i><i class="s half"></i><i class="r you"></i><i class="s half"></i></div>
-        <dl class="fmt-stats"><div><dt>Running</dt><dd>8 km, together</dd></div><div><dt>Stations</dt><dd>All 8, taking turns</dd></div><div><dt>Typical first race*</dt><dd>1:25–1:50</dd></div></dl>
+        <dl class="fmt-stats"><div><dt>Running, side by side</dt><dd>8 km</dd></div><div><dt>Stations, taking turns</dt><dd>All 8</dd></div><div><dt>Typical first race*</dt><dd>1:25–1:50</dd></div></dl>
         <p>Halves the station work, <b>not the running</b>: you run every kilometre side by side, so it's barely quicker than solo. One of you works a station while the other rests. Mixed pairs use the men's weights.</p>
       </article>
       <article class="fmt pick">
         <div class="fmt-top"><h3>Relay <span class="badge">Easiest way in</span></h3><span class="who">4 people</span></div>
         <div class="mstrip" aria-hidden="true"><i class="r"></i><i class="s"></i><i class="r"></i><i class="s"></i><i class="r"></i><i class="s"></i><i class="r"></i><i class="s"></i><i class="r you"></i><i class="s you"></i><i class="r you"></i><i class="s you"></i><i class="r"></i><i class="s"></i><i class="r"></i><i class="s"></i></div>
-        <dl class="fmt-stats"><div><dt>Running</dt><dd>2 km</dd></div><div><dt>Stations</dt><dd>2 of 8</dd></div><div><dt>Work each</dt><dd>20–30 min*</dd></div></dl>
+        <dl class="fmt-stats"><div><dt>Running</dt><dd>2 km</dd></div><div><dt>Stations, team picks</dt><dd>2 of 8</dd></div><div><dt>Work each</dt><dd>15–25 min*</dd></div></dl>
         <p>Each person runs 2 × 1 km and does 2 stations, and the team decides who does which. Only one of you works at a time.</p>
       </article>
     </div>
@@ -600,14 +601,14 @@ details.answers summary{cursor:pointer;font-weight:600;width:max-content;max-wid
       <h3 class="relay-h">Relay: who does what</h3>
       <p class="small-note">Popular tips from relay guides, not rules: the team decides who does which legs, back to back or split up.</p>
       <ol class="relay-legs" aria-label="Relay legs and who takes them">
-        <li class="pa"><span class="n">1</span><span class="st">SkiErg</span><span class="lt">A</span></li>
-        <li class="pb"><span class="n">2</span><span class="st">Sled push</span><span class="lt">B</span></li>
-        <li class="pb"><span class="n">3</span><span class="st">Sled pull</span><span class="lt">B</span></li>
-        <li class="pc"><span class="n">4</span><span class="st">Burpee jumps</span><span class="lt">C</span></li>
-        <li class="pa"><span class="n">5</span><span class="st">Row</span><span class="lt">A</span></li>
-        <li class="pd"><span class="n">6</span><span class="st">Farmers carry</span><span class="lt">D</span></li>
-        <li class="pd"><span class="n">7</span><span class="st">Lunges</span><span class="lt">D</span></li>
-        <li class="pc"><span class="n">8</span><span class="st">Wall balls</span><span class="lt">C</span></li>
+        <li class="pa"><span class="rl-n">1</span><span class="rl-st">SkiErg</span><span class="rl-lt">A</span></li>
+        <li class="pb"><span class="rl-n">2</span><span class="rl-st">Sled push</span><span class="rl-lt">B</span></li>
+        <li class="pb"><span class="rl-n">3</span><span class="rl-st">Sled pull</span><span class="rl-lt">B</span></li>
+        <li class="pc"><span class="rl-n">4</span><span class="rl-st">Burpee jumps</span><span class="rl-lt">C</span></li>
+        <li class="pa"><span class="rl-n">5</span><span class="rl-st">Row</span><span class="rl-lt">A</span></li>
+        <li class="pd"><span class="rl-n">6</span><span class="rl-st">Farmers carry</span><span class="rl-lt">D</span></li>
+        <li class="pd"><span class="rl-n">7</span><span class="rl-st">Lunges</span><span class="rl-lt">D</span></li>
+        <li class="pc"><span class="rl-n">8</span><span class="rl-st">Wall balls</span><span class="rl-lt">C</span></li>
       </ol>
       <div class="relay-people">
         <div class="rp pa"><h4>A · Least fit</h4><ul><li><span>1</span>SkiErg 1,000 m</li><li><span>5</span>Row 1,000 m</li></ul><p>Both machines: you set the pace and can pause any time, with a long rest in between.</p></div>
