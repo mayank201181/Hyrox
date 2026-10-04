@@ -21,6 +21,9 @@
   --accent-soft:#DFE4FF;
   --good:#0CA30C;
   --warn:#FAB219;
+  --bad:#D03B3B;
+  --bad-ink:#B42318;
+  --p1:#2a78d6;--p2:#eb6834;--p3:#1baf7a;--p4:#eda100;
   --font-display:"Big Shoulders Display","Arial Narrow","Roboto Condensed",Impact,sans-serif;
   --font-body:"Instrument Sans",system-ui,-apple-system,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;
   --font-mono:"JetBrains Mono",ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;
@@ -39,13 +42,15 @@
 @media (prefers-color-scheme:dark){
   :root:not([data-theme="light"]){
     --bg:#0B101A;--surface:#121A28;--sunken:#0E1421;--ink:#E8ECF4;--muted:#9BA5B7;--line:#273146;
-    --accent:#7D8CFF;--accent-ink:#0B101A;--accent-soft:#1D2754;
+    --accent:#7D8CFF;--accent-ink:#0B101A;--accent-soft:#1D2754;--bad-ink:#FF8A80;
+    --p1:#3987e5;--p2:#d95926;--p3:#199e70;--p4:#c98500;
     color-scheme:dark;
   }
 }
 :root[data-theme="dark"]{
   --bg:#0B101A;--surface:#121A28;--sunken:#0E1421;--ink:#E8ECF4;--muted:#9BA5B7;--line:#273146;
-  --accent:#7D8CFF;--accent-ink:#0B101A;--accent-soft:#1D2754;
+  --accent:#7D8CFF;--accent-ink:#0B101A;--accent-soft:#1D2754;--bad-ink:#FF8A80;
+  --p1:#3987e5;--p2:#d95926;--p3:#199e70;--p4:#c98500;
   color-scheme:dark;
 }
 
@@ -199,6 +204,25 @@ details.answers summary{cursor:pointer;font-weight:600;width:max-content;max-wid
 .ans .pts{text-align:right}
 .ans th.pts{text-align:right}
 
+/* Name gate and saving */
+.who{display:grid;gap:16px}
+.who-head{display:grid;gap:8px}
+.who-label{font-size:clamp(1.3rem,4.2vw,1.625rem);line-height:1.25;font-weight:600;letter-spacing:-.01em}
+.who-note{font-size:var(--fs-sm);color:var(--muted);max-width:60ch}
+.who-row{display:flex;gap:10px;flex-wrap:wrap}
+.who-input{flex:1 1 14rem;min-width:0;font:500 var(--fs-md)/1.3 var(--font-body);color:var(--ink);background:var(--surface);border:1px solid var(--line);border-radius:8px;padding:12px 14px}
+.who-input:focus{outline:none;border-color:var(--accent);box-shadow:0 0 0 3px var(--accent-soft)}
+.who-input::placeholder{color:var(--muted);opacity:.85}
+.who-error{font-size:var(--fs-sm);color:var(--bad-ink);font-weight:600}
+.who-bar{display:flex;justify-content:space-between;align-items:center;gap:6px 12px;flex-wrap:wrap;font-size:var(--fs-sm);color:var(--muted)}
+.who-bar b{color:var(--ink);font-weight:600}
+.link-btn{appearance:none;background:none;border:0;padding:0;font:600 var(--fs-sm)/1.4 var(--font-body);color:var(--accent);cursor:pointer;text-decoration:underline;text-underline-offset:.18em}
+.save{display:flex;align-items:center;gap:8px 10px;flex-wrap:wrap;font-size:var(--fs-sm);color:var(--muted)}
+.save i{width:8px;height:8px;border-radius:50%;background:var(--muted);flex:0 0 auto}
+.save.ok i{background:var(--good)}
+.save.err{color:var(--bad-ink)}
+.save.err i{background:var(--bad)}
+
 /* Course */
 .course{list-style:none;margin:0;padding:0;display:grid}
 .course li{display:grid;grid-template-columns:44px minmax(0,1fr);column-gap:16px;position:relative}
@@ -219,14 +243,50 @@ details.answers summary{cursor:pointer;font-weight:600;width:max-content;max-wid
 .course li.finish .st{grid-row:1;align-self:center;padding:0}
 .small-note{font-size:var(--fs-sm);color:var(--muted);max-width:62ch}
 
-/* Formats */
-.formats{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:12px}
-.fmt{border:1px solid var(--line);border-radius:var(--r-md);padding:18px;display:grid;gap:8px;align-content:start;background:var(--surface);min-width:0}
+/* Formats: per-person workload, then the relay split */
+.fmt-rows{display:grid;gap:12px}
+.fmt{border:1px solid var(--line);border-radius:var(--r-md);padding:16px 18px;display:grid;gap:12px;background:var(--surface);min-width:0}
 .fmt.pick{border-color:var(--accent);box-shadow:inset 0 0 0 1px var(--accent)}
 .fmt-top{display:flex;justify-content:space-between;align-items:center;gap:8px;flex-wrap:wrap}
-.fmt h3{font-family:var(--font-display);font-weight:800;font-size:1.875rem;line-height:1;text-transform:uppercase}
+.fmt-top .who{font:700 .6875rem/1 var(--font-mono);letter-spacing:.08em;text-transform:uppercase;color:var(--muted)}
+.fmt h3{font-family:var(--font-display);font-weight:800;font-size:1.875rem;line-height:1;text-transform:uppercase;display:flex;align-items:center;gap:10px}
 .fmt p{font-size:var(--fs-sm)}
 .badge{font-family:var(--font-mono);font-size:.625rem;font-weight:700;letter-spacing:.08em;text-transform:uppercase;background:var(--accent);color:var(--accent-ink);padding:4px 7px;border-radius:4px;white-space:nowrap}
+.mstrip{display:flex;align-items:center;gap:3px;height:20px}
+.mstrip i{display:block;background:var(--surface);border:1.5px solid var(--line)}
+.mstrip .r{flex:1 1 0;min-width:4px;height:6px;border-radius:3px}
+.mstrip .s{flex:0 0 18px;height:18px;border-radius:4px}
+.mstrip .you{background:var(--accent);border-color:var(--accent)}
+.mstrip .half{background:linear-gradient(135deg,var(--accent) 50%,var(--surface) 50%);border-color:var(--accent)}
+.fmt-stats{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px;margin:0}
+.fmt-stats div{display:grid;gap:2px;min-width:0}
+.fmt-stats dt{font-size:var(--fs-xs);color:var(--muted)}
+.fmt-stats dd{margin:0;font-weight:700;font-size:1.25rem;line-height:1.15;letter-spacing:-.01em;white-space:nowrap}
+@media (max-width:420px){.fmt-stats dd{font-size:1.0625rem}.fmt-stats dt{font-size:.6875rem}}
+.fmt-legend{display:flex;flex-wrap:wrap;gap:6px 18px;font-size:var(--fs-sm);color:var(--muted);align-items:center}
+.fmt-legend span{display:inline-flex;align-items:center;gap:7px}
+.fmt-legend i{display:inline-block;width:14px;height:14px;border-radius:3px;border:1.5px solid var(--line);background:var(--surface)}
+.fmt-legend i.you{background:var(--accent);border-color:var(--accent)}
+.fmt-legend i.half{background:linear-gradient(135deg,var(--accent) 50%,var(--surface) 50%);border-color:var(--accent)}
+.relay{display:grid;gap:14px;padding-top:6px}
+.relay-h{font-family:var(--font-display);font-weight:800;font-size:1.75rem;line-height:1;text-transform:uppercase}
+.relay-legs{list-style:none;margin:0;padding:0;display:grid;grid-template-columns:repeat(8,minmax(0,1fr));gap:6px}
+.relay-legs li{background:var(--surface);border:1px solid var(--line);border-radius:8px;overflow:hidden;display:grid;text-align:center;min-width:0}
+.relay-legs li::before{content:"";height:6px;background:var(--c)}
+.relay-legs .rl-n{font:800 1.5rem/1 var(--font-display);padding-top:6px}
+.relay-legs .rl-st{font-size:.6875rem;font-weight:600;line-height:1.15;padding:2px 3px 6px;min-height:2.3em}
+.relay-legs .rl-lt{font:700 .8125rem/1 var(--font-mono);padding:5px 0 6px;border-top:1px solid var(--line)}
+.relay-people{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}
+.rp{background:var(--surface);border:1px solid var(--line);border-left:6px solid var(--c);border-radius:var(--r-md);padding:12px 14px;display:grid;gap:6px;align-content:start;min-width:0}
+.rp h4{font-family:var(--font-display);font-weight:800;font-size:1.375rem;line-height:1;text-transform:uppercase}
+.rp ul{list-style:none;margin:0;padding:0;display:grid;gap:2px;font-weight:600;font-size:var(--fs-sm)}
+.rp ul span{font-family:var(--font-mono);color:var(--muted);margin-right:6px}
+.rp p{font-size:var(--fs-sm);color:var(--muted)}
+.pa{--c:var(--p1)}.pb{--c:var(--p2)}.pc{--c:var(--p3)}.pd{--c:var(--p4)}
+.relay-ready{background:var(--sunken);border-radius:var(--r-md);padding:16px 18px;display:grid;gap:10px}
+.relay-ready h4{font-weight:700;font-size:var(--fs-lg)}
+.relay-ready ol{margin:0;padding-left:1.3rem;display:grid;gap:4px}
+.relay-ready p{font-size:var(--fs-sm)}
 
 /* Plan */
 .week{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:12px}
@@ -253,7 +313,8 @@ details.answers summary{cursor:pointer;font-weight:600;width:max-content;max-wid
 }
 @media (max-width:640px){
   .facts{grid-template-columns:repeat(2,minmax(0,1fr))}
-  .formats{grid-template-columns:1fr}
+  .relay-legs{grid-template-columns:repeat(4,minmax(0,1fr))}
+  .relay-people{grid-template-columns:1fr}
   .pair{grid-template-columns:1fr}
 }
 @media (max-width:560px){
@@ -365,7 +426,20 @@ details.answers summary{cursor:pointer;font-weight:600;width:max-content;max-wid
       <p>Answer for how you are today, not your best day. Each answer feeds one of the five qualities, and you get a verdict at the end.</p>
     </div>
 
-    <div class="quiz card" id="quiz">
+    <form class="who card" id="who" novalidate>
+      <div class="who-head">
+        <label class="who-label" for="who-name">First, who's taking the test?</label>
+        <p class="who-note">Your name and answers are saved so the friend who sent you this link can see how you did. Use your full name so results don't get mixed up.</p>
+      </div>
+      <div class="who-row">
+        <input class="who-input" id="who-name" name="name" type="text" autocomplete="name" autocapitalize="words" spellcheck="false" maxlength="40" placeholder="Your full name" required>
+        <button class="btn btn-primary" type="submit">Start the test</button>
+      </div>
+      <p class="who-error" id="who-error" role="alert" hidden>Type your name to start.</p>
+    </form>
+
+    <div class="quiz card" id="quiz" hidden>
+      <div class="who-bar"><span>Taking the test as <b id="who-show"></b></span><button type="button" class="link-btn" id="who-change">Not you?</button></div>
       <div class="track" id="track" aria-hidden="true"><span class="now"></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></div>
       <div class="q-body" id="q-body">
         <div class="q-meta"><span class="count" id="q-count">Question 1 of 10</span><span class="tag" id="q-pillar">Engine</span></div>
@@ -389,9 +463,10 @@ details.answers summary{cursor:pointer;font-weight:600;width:max-content;max-wid
 
     <div class="result card" id="result" hidden>
       <div class="verdict-wrap">
-        <p class="eyebrow">Your verdict</p>
+        <p class="eyebrow" id="r-eyebrow">Your verdict</p>
         <h3 class="verdict" id="r-head" tabindex="-1">Yes.</h3>
         <p class="r-body" id="r-body"></p>
+        <p class="save" id="r-save" role="status"><i aria-hidden="true"></i><span id="r-save-text">Saving your result…</span><button type="button" class="link-btn" id="r-save-retry" hidden>Try again</button></p>
       </div>
       <div class="score">
         <p class="fig"><span id="r-score">0</span><small>/30</small></p>
@@ -495,26 +570,63 @@ details.answers summary{cursor:pointer;font-weight:600;width:max-content;max-wid
 
   <section class="block" id="formats" aria-labelledby="formats-title">
     <div class="block-head">
-      <p class="eyebrow">Solo, pair or team</p>
+      <p class="eyebrow">Solo, pair or team · per person</p>
       <h2 id="formats-title">Pick how you race</h2>
+      <p>Same course in every format. What changes is how much of the race is yours.</p>
     </div>
-    <div class="formats">
+    <div class="fmt-rows">
       <article class="fmt">
-        <div class="fmt-top"><h3>Open</h3></div>
-        <p class="eyebrow">Solo</p>
-        <p>All 8 km and all 8 stations on your own, at the weights above.</p>
+        <div class="fmt-top"><h3>Solo</h3><span class="who">1 person</span></div>
+        <div class="mstrip" aria-hidden="true"><i class="r you"></i><i class="s you"></i><i class="r you"></i><i class="s you"></i><i class="r you"></i><i class="s you"></i><i class="r you"></i><i class="s you"></i><i class="r you"></i><i class="s you"></i><i class="r you"></i><i class="s you"></i><i class="r you"></i><i class="s you"></i><i class="r you"></i><i class="s you"></i></div>
+        <dl class="fmt-stats"><div><dt>Running</dt><dd>8 km</dd></div><div><dt>Stations</dt><dd>All 8</dd></div><div><dt>Typical first race*</dt><dd>1h30–2h10</dd></div></dl>
+        <p>Everything is yours, at the weights above.</p>
+      </article>
+      <article class="fmt">
+        <div class="fmt-top"><h3>Doubles</h3><span class="who">2 people</span></div>
+        <div class="mstrip" aria-hidden="true"><i class="r you"></i><i class="s half"></i><i class="r you"></i><i class="s half"></i><i class="r you"></i><i class="s half"></i><i class="r you"></i><i class="s half"></i><i class="r you"></i><i class="s half"></i><i class="r you"></i><i class="s half"></i><i class="r you"></i><i class="s half"></i><i class="r you"></i><i class="s half"></i></div>
+        <dl class="fmt-stats"><div><dt>Running, side by side</dt><dd>8 km</dd></div><div><dt>Stations, taking turns</dt><dd>All 8</dd></div><div><dt>Typical first race*</dt><dd>1h25–1h50</dd></div></dl>
+        <p>Halves the station work, <b>not the running</b>: you run every kilometre side by side, so it's nowhere near half the time. One of you works a station while the other rests. Mixed pairs use the men's weights.</p>
       </article>
       <article class="fmt pick">
-        <div class="fmt-top"><h3>Doubles</h3><span class="badge">Good first race</span></div>
-        <p class="eyebrow">Two people</p>
-        <p>You run every kilometre together and split each station however you like, one working while the other rests. Same weights as Open; mixed pairs use the men's weights.</p>
-      </article>
-      <article class="fmt">
-        <div class="fmt-top"><h3>Relay</h3></div>
-        <p class="eyebrow">Four people</p>
-        <p>Each person runs 2 × 1 km and does 2 stations. The gentlest way in.</p>
+        <div class="fmt-top"><h3>Relay <span class="badge">Easiest way in</span></h3><span class="who">4 people</span></div>
+        <div class="mstrip" aria-hidden="true"><i class="r you"></i><i class="s you"></i><i class="r"></i><i class="s"></i><i class="r"></i><i class="s"></i><i class="r"></i><i class="s"></i><i class="r you"></i><i class="s you"></i><i class="r"></i><i class="s"></i><i class="r"></i><i class="s"></i><i class="r"></i><i class="s"></i></div>
+        <dl class="fmt-stats"><div><dt>Running</dt><dd>2 km</dd></div><div><dt>Stations, team picks</dt><dd>2 of 8</dd></div><div><dt>Work each, first race*</dt><dd>20–30 min</dd></div></dl>
+        <p>Each person runs 2 × 1 km and does 2 stations, and the team decides who does which. Only one of you works at a time.</p>
       </article>
     </div>
+    <p class="fmt-legend" aria-hidden="true"><span><i class="you"></i>you</span><span><i class="half"></i>shared</span><span><i></i>teammates</span><span>bar = 1 km run, square = exercise station</span></p>
+    <p class="small-note">*Approximate, from third-party analysis of 2025/26 results. Singapore races have run slower than average.</p>
+
+    <div class="relay">
+      <h3 class="relay-h">Relay: who does what</h3>
+      <p class="small-note">Popular tips from relay guides, not rules: the team decides who does which legs, back to back or split up.</p>
+      <ol class="relay-legs" aria-label="Relay legs and who takes them">
+        <li class="pa"><span class="rl-n">1</span><span class="rl-st">SkiErg</span><span class="rl-lt">A</span></li>
+        <li class="pb"><span class="rl-n">2</span><span class="rl-st">Sled push</span><span class="rl-lt">B</span></li>
+        <li class="pb"><span class="rl-n">3</span><span class="rl-st">Sled pull</span><span class="rl-lt">B</span></li>
+        <li class="pc"><span class="rl-n">4</span><span class="rl-st">Burpee jumps</span><span class="rl-lt">C</span></li>
+        <li class="pa"><span class="rl-n">5</span><span class="rl-st">Row</span><span class="rl-lt">A</span></li>
+        <li class="pd"><span class="rl-n">6</span><span class="rl-st">Farmers carry</span><span class="rl-lt">D</span></li>
+        <li class="pd"><span class="rl-n">7</span><span class="rl-st">Lunges</span><span class="rl-lt">D</span></li>
+        <li class="pc"><span class="rl-n">8</span><span class="rl-st">Wall balls</span><span class="rl-lt">C</span></li>
+      </ol>
+      <div class="relay-people">
+        <div class="rp pa"><h4>A · Beginner</h4><ul><li><span>1</span>SkiErg 1,000 m</li><li><span>5</span>Row 1,000 m</li></ul><p>Two machines, no weights: you set the pace and can pause (stay seated on the rower), with a long rest in between.</p></div>
+        <div class="rp pb"><h4>B · Strongest</h4><ul><li><span>2</span>Sled push 50 m</li><li><span>3</span>Sled pull 50 m</li></ul><p>The sleds only move if you're strong enough. Tough back to back, so two strong people can split them.</p></div>
+        <div class="rp pc"><h4>C · Fittest</h4><ul><li><span>4</span>Burpee broad jumps 80 m</li><li><span>8</span>100 wall balls</li></ul><p>Two of the most tiring stations. The other three cheer you through all 100 wall balls, then all four cross the line together.</p></div>
+        <div class="rp pd"><h4>D · All-rounder</h4><ul><li><span>6</span>Farmers carry 200 m</li><li><span>7</span>Sandbag lunges 100 m</li></ul><p>Tests your grip, then your legs.</p></div>
+      </div>
+      <div class="relay-ready">
+        <h4>Ready for relay if you can…</h4>
+        <ol>
+          <li>Jog 1 km, twice. Walk breaks are fine.</li>
+          <li>SkiErg (a standing ski-pull machine) 1,000 m at your own pace.</li>
+          <li>Row 1,000 m at your own pace.</li>
+        </ol>
+        <p>What doesn't get easier: the weights are the same as solo, and every station must be finished in full or the team is disqualified. Teams are 4 women, 4 men, or 2 and 2.</p>
+      </div>
+    </div>
+    <div class="actions"><a class="btn btn-primary" href="/share">Get this as WhatsApp images</a></div>
     <p class="small-note">Pro divisions use heavier weights. You don't need them for a first race.</p>
   </section>
 
@@ -547,6 +659,7 @@ details.answers summary{cursor:pointer;font-weight:600;width:max-content;max-wid
 
   <footer class="foot">
     <p>Unofficial. Made by a friend who wants to see you on the start line. Not affiliated with HYROX.</p>
+    <p>When you finish the test, your name, answers and score are saved for the friend who shared this page. Nothing else is collected.</p>
     <p>Formats, distances and weights are from the HYROX 2026/27 rulebooks. Race dates are from <a href="https://hyrox.com/event/aia-hyrox-singapore/" target="_blank" rel="noopener">hyrox.com</a>; check there before you book. Finish times are typical ranges, not official statistics.</p>
   </footer>
 
@@ -628,8 +741,8 @@ details.answers summary{cursor:pointer;font-weight:600;width:max-content;max-wid
       bodyRun: "Everything except your running is race-ready. Race Doubles now, or go solo in Open once you've run twice a week for a couple of months.",
       div: "Doubles now, Open next", prep: "10 to 12 weeks to solo Open" },
     team: { band: 1, head: "Yes, with a team.",
-      body: "Start with a Relay, where you run 2 × 1 km and do 2 stations, or Doubles with a fitter partner. Solo Open is about four months away.",
-      div: "Relay or Doubles", prep: "12 to 16 weeks to solo Open" },
+      body: "Start with a Relay: you run 2 × 1 km and do 2 stations, and the team picks which. Doubles halves the stations but you still run all 8 km. Solo Open is about four months away.",
+      div: "Relay now", prep: "12 to 16 weeks to solo Open" },
     notyet: { band: 0, head: "Not yet. Give it 16 weeks.",
       body: "Build a running habit and basic leg strength first. A Relay is a realistic first race. Retake this test in a month and watch the bars move.",
       div: "Relay first", prep: "16+ weeks to solo Open" }
@@ -651,17 +764,27 @@ details.answers summary{cursor:pointer;font-weight:600;width:max-content;max-wid
     spName: $("#r-sp-name"), spText: $("#r-sp-text"), lvName: $("#r-lv-name"), lvText: $("#r-lv-text"),
     race: $("#r-race"), raceFit: $("#r-race-fit"), copy: $("#r-copy"), retake: $("#r-retake"),
     toast: $("#r-toast"), share: $("#r-share"), answers: $("#r-answers"),
-    nextRace: $("#next-race"), nrDays: $("#nr-days")
+    nextRace: $("#next-race"), nrDays: $("#nr-days"),
+    who: $("#who"), whoName: $("#who-name"), whoError: $("#who-error"), whoShow: $("#who-show"), whoChange: $("#who-change"),
+    rEyebrow: $("#r-eyebrow"), save: $("#r-save"), saveText: $("#r-save-text"), saveRetry: $("#r-save-retry")
   };
 
-  const state = { answers: new Array(QUESTIONS.length).fill(null), index: 0, locked: false, shareText: "" };
+  const state = { name: null, synced: false, saving: false, answers: new Array(QUESTIONS.length).fill(null), index: 0, locked: false, shareText: "" };
+  const API = "/api/results";
+
+  function cleanName(raw) {
+    return String(raw || "").replace(/[\u0000-\u001f\u007f]/g, "").replace(/\s+/g, " ").trim().slice(0, 40);
+  }
+  function firstName() {
+    return (state.name || "").split(" ")[0];
+  }
 
   function isValid(saved) {
     return !!saved && Array.isArray(saved.answers) && saved.answers.length === QUESTIONS.length &&
       saved.answers.every((a) => a === null || (Number.isInteger(a) && a >= 0 && a <= 3));
   }
   function save() {
-    try { localStorage.setItem(KEY, JSON.stringify({ answers: state.answers, index: state.index })); } catch (e) { /* storage unavailable */ }
+    try { localStorage.setItem(KEY, JSON.stringify({ name: state.name, synced: state.synced, answers: state.answers, index: state.index })); } catch (e) { /* storage unavailable */ }
   }
   function load() {
     try { const raw = localStorage.getItem(KEY); return raw ? JSON.parse(raw) : null; } catch (e) { return null; }
@@ -731,7 +854,7 @@ details.answers summary{cursor:pointer;font-weight:600;width:max-content;max-wid
   }
 
   function choose(k) {
-    if (state.locked || el.quiz.hidden) return;
+    if (state.locked || el.quiz.hidden || !state.name) return;
     const i = state.index;
     state.answers[i] = k;
     el.opts.querySelectorAll(".opt").forEach((b) => b.setAttribute("aria-pressed", String(Number(b.dataset.k) === k)));
@@ -798,6 +921,7 @@ details.answers summary{cursor:pointer;font-weight:600;width:max-content;max-wid
     const { ps, total } = scorePillars();
     const v = verdictFor(total, ps);
 
+    el.rEyebrow.textContent = state.name ? `${firstName()}'s verdict` : "Your verdict";
     el.head.textContent = v.head;
     el.rbody.textContent = v.body;
     el.score.textContent = String(total);
@@ -862,13 +986,16 @@ details.answers summary{cursor:pointer;font-weight:600;width:max-content;max-wid
 
     const strongest = max === 0 ? "nothing yet" : PILLARS[sp].name;
     const work = min === 6 ? "race pacing" : PILLARS[lv].name;
-    state.shareText = `My HYROX readiness score: ${total}/${MAX}. Verdict: "${v.head}" Strongest: ${strongest}. To work on: ${work}. Suggested format: ${v.div}.`;
+    state.shareText = `${state.name ? state.name + "'s" : "My"} HYROX readiness score: ${total}/${MAX}. Verdict: "${v.head}" Strongest: ${strongest}. To work on: ${work}. Suggested format: ${v.div}.`;
     el.share.value = state.shareText;
     el.share.hidden = true;
     el.toast.textContent = "";
 
+    el.who.hidden = true;
     el.quiz.hidden = true;
     el.result.hidden = false;
+    if (state.synced) setSave("ok", `Saved for ${state.name}.`);
+    else submitResult();
 
     const pct = (total / MAX) * 100;
     el.fill.style.transition = "none";
@@ -886,6 +1013,7 @@ details.answers summary{cursor:pointer;font-weight:600;width:max-content;max-wid
   function retake() {
     state.answers = new Array(QUESTIONS.length).fill(null);
     state.index = 0;
+    state.synced = false;
     save();
     el.result.hidden = true;
     el.quiz.hidden = false;
@@ -916,6 +1044,82 @@ details.answers summary{cursor:pointer;font-weight:600;width:max-content;max-wid
     }
   }
 
+  function setSave(kind, text) {
+    el.save.className = `save${kind ? " " + kind : ""}`;
+    el.saveText.textContent = text;
+    el.saveRetry.hidden = kind !== "err";
+  }
+
+  async function submitResult() {
+    if (state.saving || !state.name || state.answers.some((a) => a === null)) return;
+    state.saving = true;
+    setSave("", "Saving your result…");
+    try {
+      const labels = QUESTIONS.map((q, i) => `${q.s}: ${q.o[state.answers[i]]}`);
+      const res = await fetch(API, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ name: state.name, answers: state.answers, labels })
+      });
+      const data = await res.json().catch(() => ({}));
+      if (!res.ok) throw new Error(data.error || "Couldn't save your result.");
+      state.synced = true;
+      save();
+      setSave("ok", data.attempts > 1 ? `Saved for ${state.name}. This replaces your earlier result.` : `Saved for ${state.name}.`);
+    } catch (e) {
+      const msg = e instanceof TypeError ? "Couldn't reach the server." : e.message;
+      setSave("err", `${msg} Your answers are kept on this device.`);
+    } finally {
+      state.saving = false;
+    }
+  }
+
+  function showGate(focus) {
+    el.result.hidden = true;
+    el.quiz.hidden = true;
+    el.who.hidden = false;
+    el.whoName.value = "";
+    el.whoError.hidden = true;
+    if (focus) el.whoName.focus();
+  }
+
+  function startAs(name) {
+    state.name = name;
+    state.synced = false;
+    state.answers = new Array(QUESTIONS.length).fill(null);
+    state.index = 0;
+    save();
+    el.whoShow.textContent = name;
+    el.who.hidden = true;
+    el.result.hidden = true;
+    el.quiz.hidden = false;
+    renderQuestion(true);
+    el.quiz.scrollIntoView({ block: "start", behavior: reduced ? "auto" : "smooth" });
+    el.text.focus({ preventScroll: true });
+  }
+
+  el.who.addEventListener("submit", (e) => {
+    e.preventDefault();
+    const name = cleanName(el.whoName.value);
+    if (name.length < 2) {
+      el.whoError.hidden = false;
+      el.whoName.focus();
+      return;
+    }
+    startAs(name);
+  });
+
+  el.whoChange.addEventListener("click", () => {
+    state.name = null;
+    state.synced = false;
+    state.answers = new Array(QUESTIONS.length).fill(null);
+    state.index = 0;
+    save();
+    showGate(true);
+  });
+
+  el.saveRetry.addEventListener("click", submitResult);
+
   function updateCountdown() {
     const now = Date.now();
     if (now >= RACE.end) { el.nextRace.hidden = true; return; }
@@ -945,20 +1149,26 @@ details.answers summary{cursor:pointer;font-weight:600;width:max-content;max-wid
 
   function boot(hotData) {
     const saved = isValid(hotData) ? hotData : load();
-    if (isValid(saved)) {
+    if (isValid(saved) && typeof saved.name === "string" && cleanName(saved.name).length >= 2) {
+      state.name = cleanName(saved.name);
+      state.synced = saved.synced === true;
       state.answers = saved.answers.slice();
       const firstOpen = state.answers.findIndex((a) => a === null);
       const idx = Number.isInteger(saved.index) ? Math.min(Math.max(saved.index, 0), QUESTIONS.length - 1) : 0;
       state.index = firstOpen === -1 ? idx : Math.min(idx, firstOpen);
     }
-    renderQuestion(false);
-    if (state.answers.every((a) => a !== null)) showResult(false);
     updateCountdown();
+    renderQuestion(false);
+    if (!state.name) { showGate(false); return; }
+    el.whoShow.textContent = state.name;
+    el.who.hidden = true;
+    if (state.answers.every((a) => a !== null)) showResult(false);
+    else el.quiz.hidden = false;
   }
 
   try {
     const hot = window.claude && window.claude.hot;
-    if (hot && typeof hot.snapshot === "function") hot.snapshot(() => ({ answers: state.answers, index: state.index }));
+    if (hot && typeof hot.snapshot === "function") hot.snapshot(() => ({ name: state.name, synced: state.synced, answers: state.answers, index: state.index }));
   } catch (e) { /* not running in a viewer */ }
   const hot = window.claude && window.claude.hot;
   if (hot && typeof hot.ready === "function") hot.ready(boot);
